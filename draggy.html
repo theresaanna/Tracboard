@@ -1,0 +1,43 @@
+<html>
+<head>
+  <link href="drag.css" rel="stylesheet" type="text/css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script>
+  function loadDrag() {
+    $('.container').bind('dragenter', handleDragEnter);
+    $('.container').bind('drop', handleDrop);
+    $('.container').bind('dragover', handleDragOver);
+    $('.drag').bind('dragstart', handleDragStart);
+    $('.drag').bind('dragend', handleDragEnd);
+  }
+  $(window).bind('load', loadDrag, false);
+  
+  function handleDragStart(e) {
+    e.effectAllowed = "copy";
+    e.dataTransfer.setData("text/plain", e.target.textContent);
+    $('.container').css('border', '1px solid gray');
+  }
+  function handleDragEnd(e) {
+    $('.container').css('border', '0');
+  }
+  function handleDragEnter(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    return false;
+  }
+  function handleDrop(e) {
+    var s = e.target;
+  }
+  function handleDragOver(e) {
+    e.dataTransfer.dropEffect = "copy";
+    e.stopPropagation();
+    e.preventDefault();
+    return false;
+  }
+  </script>
+</head>
+<body>
+  <div class="drag" draggable="true">hi</div>
+  <div class="container"></div>
+</body>
+</html>

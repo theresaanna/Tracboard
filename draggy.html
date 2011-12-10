@@ -4,12 +4,15 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
   <script>
   $(function() {
-    var draggy = document.getElementById("drag"),
+    var notes = document.querySelectorAll('.note-container');
         dropbox = document.getElementById("container"),
         dragSrcEl = null;
     
-    draggy.addEventListener("dragstart", handleDragStart, false);
-    draggy.addEventListener("dragend", handleDragEnd, false);
+    /* dragstart and dragend are events that occur on both the drag target and the drop zone */
+    [].forEach.call(notes, function(note) {
+      note.addEventListener("dragstart", handleDragStart, false);
+      note.addEventListener("dragend", handleDragEnd, false);
+    });
     dropbox.addEventListener("dragstart", handleDragOver, false);
   	dropbox.addEventListener("dragend", handleDragOver, false);
   	
@@ -56,14 +59,22 @@
       if (dragSrcEl != this) {
         // Set the source column's HTML to the HTML of the columnwe dropped on.
         dragSrcEl.innerHTML = this.innerHTML;
-        this.innerHTML = e.dataTransfer.getData('text/html');
+        $(this).append(e.dataTransfer.getData('text/html'));
       }
     }
   });
   </script>
 </head>
 <body>
-  <div id="drag" draggable="true"><div class="thingy">hi</div></div>
+  <div id="todo">
+    <header>To do</header>
+    <div class="note-container" draggable="true">
+      <div class="note">hi</div>
+    </div>
+    <div class="note-container" draggable="true">
+      <div class="note">hey</div>
+    </div>
+  </div>
   <div id="container"></div>
 </body>
 </html>

@@ -1,10 +1,7 @@
-#drag {
-  width: 30px;
-  height: 30px;
-}
-
-.thingy {
+.note {
   background-color: pink;
+  width: 50px;
+  margin: 5px;
 }
 
 #container {

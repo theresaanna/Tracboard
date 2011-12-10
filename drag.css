@@ -1,10 +1,10 @@
-.drag {
+#drag {
   width: 30px;
   height: 30px;
   background-color: pink;
 }
 
-.container {
+#container {
   width: 300px;
   height: 300px;
   background-color: lightblue;

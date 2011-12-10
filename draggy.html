@@ -3,41 +3,67 @@
   <link href="drag.css" rel="stylesheet" type="text/css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
   <script>
-  function loadDrag() {
-    $('.container').bind('dragenter', handleDragEnter);
-    $('.container').bind('drop', handleDrop);
-    $('.container').bind('dragover', handleDragOver);
-    $('.drag').bind('dragstart', handleDragStart);
-    $('.drag').bind('dragend', handleDragEnd);
-  }
-  $(window).bind('load', loadDrag, false);
-  
-  function handleDragStart(e) {
-    e.effectAllowed = "copy";
-    e.dataTransfer.setData("text/plain", e.target.textContent);
-    $('.container').css('border', '1px solid gray');
-  }
-  function handleDragEnd(e) {
-    $('.container').css('border', '0');
-  }
-  function handleDragEnter(e) {
-    e.stopPropagation();
-    e.preventDefault();
-    return false;
-  }
-  function handleDrop(e) {
-    var s = e.target;
-  }
-  function handleDragOver(e) {
-    e.dataTransfer.dropEffect = "copy";
-    e.stopPropagation();
-    e.preventDefault();
-    return false;
-  }
+  $(function() {
+    var draggy = document.getElementById("drag"),
+        dropbox = document.getElementById("container"),
+        dragSrcEl = null;
+    
+    draggy.addEventListener("dragstart", handleDragStart, false);
+    draggy.addEventListener("dragend", handleDragEnd, false);
+    dropbox.addEventListener("dragstart", handleDragOver, false);
+  	dropbox.addEventListener("dragend", handleDragOver, false);
+  	
+    
+    dropbox.addEventListener("dragenter", handleDragEnter, false);
+  	dropbox.addEventListener("dragleave", handleDragLeave, false);
+  	dropbox.addEventListener("dragover", handleDragOver, false);
+  	dropbox.addEventListener("drop", handleDrop, false);
+
+    function handleDragStart(e) {
+      this.style.opacity = '0.4';
+      e.effectAllowed = "copy";
+      e.dataTransfer.setData('text/html', this.innerHTML);
+      dragSrcEl = this;
+    }
+    function handleDragEnd(e) {
+      this.style.opacity = '1';
+      $(this).css('border', 'none');
+    }
+        
+    function handleDragEnter(e) {
+      if (e.preventDefault) {
+        e.preventDefault();
+      }
+      $(this).css('border', '3px solid gray');
+    }
+    
+    function handleDragLeave(e) {
+      $(this).css('border', 'none');
+    }
+    
+    function handleDragOver(e) {
+      if (e.preventDefault) {
+        e.preventDefault();
+      }
+      e.dataTransfer.dropEffect = "move";
+    }
+    function handleDrop(e) {
+      if (e.stopPropagation) {
+        e.stopPropagation();
+      }
+      // Don't do anything if dropping the same column we're dragging.
+      if (dragSrcEl != this) {
+        // Set the source column's HTML to the HTML of the columnwe dropped on.
+        dragSrcEl.innerHTML = this.innerHTML;
+        this.innerHTML = e.dataTransfer.getData('text/html');
+      }
+    }
+    
+  });
   </script>
 </head>
 <body>
-  <div class="drag" draggable="true">hi</div>
-  <div class="container"></div>
+  <div id="drag" draggable="true">hi</div>
+  <div id="container"></div>
 </body>
 </html>

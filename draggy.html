@@ -4,8 +4,9 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
   <script>
   $(function() {
-    var notes = document.querySelectorAll('.note-container');
-        dropbox = document.getElementById("container"),
+    /* grab all draggable objects and columns that they can land in. set placeholder var for the current dragged item */
+    var notes = document.querySelectorAll('.note-container'),
+        columns = document.querySelectorAll('.column'),
         dragSrcEl = null;
     
     /* dragstart and dragend are events that occur on both the drag target and the drop zone */
@@ -13,20 +14,22 @@
       note.addEventListener("dragstart", handleDragStart, false);
       note.addEventListener("dragend", handleDragEnd, false);
     });
-    dropbox.addEventListener("dragstart", handleDragOver, false);
-  	dropbox.addEventListener("dragend", handleDragOver, false);
-  	
     
-    dropbox.addEventListener("dragenter", handleDragEnter, false);
-  	dropbox.addEventListener("dragleave", handleDragLeave, false);
-  	dropbox.addEventListener("dragover", handleDragOver, false);
-  	dropbox.addEventListener("drop", handleDrop, false);
+    [].forEach.call(columns, function(column) {
+      column.addEventListener("dragstart", handleDragOver, false);
+    	column.addEventListener("dragend", handleDragOver, false);
+      column.addEventListener("dragenter", handleDragEnter, false);
+    	column.addEventListener("dragleave", handleDragLeave, false);
+    	column.addEventListener("dragover", handleDragOver, false);
+    	column.addEventListener("drop", handleDrop, false);
+    });
 
     function handleDragStart(e) {
       this.style.opacity = '0.4';
       e.effectAllowed = "copy";
       e.dataTransfer.setData('text/html', this.innerHTML);
       dragSrcEl = this;
+      $(this).css('border', '3px solid gray');
     }
     function handleDragEnd(e) {
       this.style.opacity = '1';
@@ -75,6 +78,8 @@
       <div class="note">hey</div>
     </div>
   </div>
-  <div id="container"></div>
+  <div id="inprogress" class="column">
+    <header>In Progress</header>
+  </div>
 </body>
 </html>

@@ -51,6 +51,7 @@
       if (e.stopPropagation) {
         e.stopPropagation();
       }
+      $(this).css('border', 'none');
       // Don't do anything if dropping the same column we're dragging.
       if (dragSrcEl != this) {
         // Set the source column's HTML to the HTML of the columnwe dropped on.
@@ -58,12 +59,11 @@
         this.innerHTML = e.dataTransfer.getData('text/html');
       }
     }
-    
   });
   </script>
 </head>
 <body>
-  <div id="drag" draggable="true">hi</div>
+  <div id="drag" draggable="true"><div class="thingy">hi</div></div>
   <div id="container"></div>
 </body>
 </html>

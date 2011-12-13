@@ -10,14 +10,12 @@
         dragSrcEl = null;
     
     /* dragstart and dragend are events that occur on both the drag target and the drop zone */
-    [].forEach.call(notes, function(note) {
-      note.addEventListener("dragstart", handleDragStart, false);
-      note.addEventListener("dragend", handleDragEnd, false);
-    });
+    for (var i=0; i<notes.length; i++) {
+      notes[i].addEventListener("dragstart", handleDragStart, false);
+      notes[i].addEventListener("dragstop", handleDragEnd, false);
+    }
     
     [].forEach.call(columns, function(column) {
-      column.addEventListener("dragstart", handleDragOver, false);
-    	column.addEventListener("dragend", handleDragOver, false);
       column.addEventListener("dragenter", handleDragEnter, false);
     	column.addEventListener("dragleave", handleDragLeave, false);
     	column.addEventListener("dragover", handleDragOver, false);
@@ -26,14 +24,16 @@
 
     function handleDragStart(e) {
       this.style.opacity = '0.4';
-      e.effectAllowed = "copy";
+      e.effectAllowed = "move";
       e.dataTransfer.setData('text/html', this.innerHTML);
       dragSrcEl = this;
+      dragSrcEl.className = 'active';
       $(this).css('border', '3px solid gray');
     }
     function handleDragEnd(e) {
       this.style.opacity = '1';
       $(this).css('border', 'none');
+      dragSrcEl.className = '';
     }
         
     function handleDragEnter(e) {
@@ -50,8 +50,11 @@
     function handleDragOver(e) {
       if (e.preventDefault) {
         e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
       }
-      e.dataTransfer.dropEffect = "move";
+      else {
+        return false;
+      }
     }
     function handleDrop(e) {
       if (e.stopPropagation) {
@@ -60,16 +63,16 @@
       $(this).css('border', 'none');
       // Don't do anything if dropping the same column we're dragging.
       if (dragSrcEl != this) {
-        // Set the source column's HTML to the HTML of the columnwe dropped on.
-        dragSrcEl.innerHTML = this.innerHTML;
-        $(this).append(e.dataTransfer.getData('text/html'));
+        // Set the source column's HTML to the HTML of the column we dropped on.
+        dragSrcEl.parentNode.removeChild(dragSrcEl);
+        $(this).append(dragSrcEl);
       }
     }
   });
   </script>
 </head>
 <body>
-  <div id="todo">
+  <div id="todo" class="column">
     <header>To do</header>
     <div class="note-container" draggable="true">
       <div class="note">hi</div>
